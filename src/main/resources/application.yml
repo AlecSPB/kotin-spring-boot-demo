@@ -1,0 +1,77 @@
+spring:
+  profiles:
+    active: dev
+  thymeleaf:
+    mode: HTML
+    cache: false
+    prefix: /WEB-INF/templates/
+  jpa:
+    hibernate:
+      ddl-auto: update
+      use-new-id-generator-mappings: true
+    properties:
+      hibernate.show_sql: true
+  datasource:
+    # override the default tomcat pool jdbc
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximum-pool-size: 10
+      connection-test-query: SELECT 1
+      pool-name: springHikariCP
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+  devtools:
+    restart:
+      enabled: false
+
+logging:
+  level:
+    ROOT: INFO
+
+management:
+  # actually enabled in SecurityConfig.ManagementWebSecurityConfigurerAdapter
+  security:
+    enabled: false
+  context-path: /mgnt
+
+app:
+  security:
+    usersByUsernameQuery: select username, password, active from user where username = ?
+    authoritiesByUsernameQuery: select username, concat('ROLE_', user_type) from user where username = ?
+    realmName: Demo
+    rememberMeKey: demoKey
+    formLoginLoginPage: /login
+    passwordSecret: ga32gwe5h
+
+server:
+  port: 8088
+
+---
+
+spring:
+  profiles: prod
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  datasource:
+    url: jdbc:mysql://localhost:3306/dev?useSSL=false
+    username: dev
+    password: dev
+    driver-class-name: com.mysql.jdbc.Driver
+
+
+---
+
+spring:
+  profiles: dev
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.H2Dialect
+  datasource:
+    url: jdbc:h2:~/sample;DB_CLOSE_ON_EXIT=TRUE
+    username: sample
+    password: sample
+    driver-class-name: org.h2.Driver

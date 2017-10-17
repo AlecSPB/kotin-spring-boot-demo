@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:include="common :: head (#{user.list.title})">
+    <meta charset="UTF-8">
+    <title>User List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<nav th:replace="common :: nav (#{user.list.pageName})"></nav>
+
+<div class="container">
+    <h1 class="mt-3" th:text="#{title.application}">Application Title</h1>
+    <p th:text="#{user.list.userCount(${@userServiceImpl.countUsers()})}">No. of users: 5</p>
+    <table class="table table-responsive">
+        <tr th:unless="${users.isEmpty()}">
+            <th>Row</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Created At</th>
+            <th>Modified At</th>
+            <th sec:authorize="hasRole('ADMIN')">Operation</th>
+        </tr>
+        <tr th:each="user, userStat : ${users}">
+            <td th:text="${userStat.index}">Row</td>
+            <td th:text="${user.getUsername()}">Name</td>
+            <td th:text="${user.getUserType()}">Type</td>
+            <td th:text="${{user.createdAt}}">Created At</td>
+            <td th:text="${{user.modifiedAt}}">Modified At</td>
+            <td sec:authorize="hasRole('ADMIN')"><a th:href="@{/user/delete/{userId}(userId=${user.id})}">Delete</a></td>
+        </tr>
+    </table>
+</div>
+
+<footer th:replace="common :: footer"></footer>
+<th:block th:replace="common :: js"></th:block>
+</body>
+</html>
