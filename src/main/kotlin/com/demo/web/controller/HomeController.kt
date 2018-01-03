@@ -30,7 +30,7 @@ class HomeController : ApplicationContextAware {
         this.applicationContext = applicationContext
     }
 
-    @RequestMapping(value = "/showBeans", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/showBeans"], method = arrayOf(RequestMethod.GET))
     @ResponseBody
     fun showBeans(): String {
         return Arrays.asList(*applicationContext.beanDefinitionNames).toString() + "\n" +

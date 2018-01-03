@@ -39,27 +39,27 @@ class UserController {
         this.userService = userService
     }
 
-    @RequestMapping(value = "/create/{id:\\d*}", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/create/{id:\\d*}"], method = arrayOf(RequestMethod.GET))
     @ResponseBody
     fun create(@PathVariable id: Long): String {
         val user = userService.create("Lee.$id@demo.com", "demo", UserType.USER)
         return user.toString()
     }
 
-    @RequestMapping(value = *arrayOf("", "/list"), method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["", "/list"], method = arrayOf(RequestMethod.GET))
     fun show(model: Model): String {
         val users = userService.findAll()
         model.addAttribute("users", users)
         return "user/list"
     }
 
-    @RequestMapping(value = "/create", method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/create"], method = arrayOf(RequestMethod.GET))
     fun createForm(model: Model): String {
         model.addAttribute("user", User())
         return "user/create"
     }
 
-    @RequestMapping(value = "/create", method = arrayOf(RequestMethod.POST))
+    @RequestMapping(value = ["/create"], method = arrayOf(RequestMethod.POST))
     fun postForm(@Valid user: User, bindingResult: BindingResult, model: ModelMap): String {
         if (bindingResult.hasErrors()) {
             return "user/create"
@@ -69,7 +69,7 @@ class UserController {
         return "redirect:/user"
     }
 
-    @RequestMapping(value = "/delete/{id:\\d*}")
+    @RequestMapping(value = ["/delete/{id:\\d*}"])
     fun delete(@PathVariable id: Long, model: ModelMap): String {
         userService.remove(id)
         model.clear()
